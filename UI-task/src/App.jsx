@@ -1,35 +1,110 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.js
 
-function App() {
-  const [count, setCount] = useState(0)
+import React, { useEffect, useState } from 'react';
+import { fetchTransactions } from './api';
+
+const calculatePoints = (amount) => {
+  let points = 0;
+
+  if (amount > 100) {
+    points += (amount - 100) * 2; // 2 points for every dollar over $100
+    points += 50; // 1 point for every dollar between $50 and $100
+  } else if (amount > 50) {
+    points += (amount - 50); // 1 point for every dollar between $50 and $100
+  }
+
+  return points;
+};
+
+const App = () => {
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [customerId, setCustomerId] = useState('');
+  const [amount, setAmount] = useState('');
+  const [date, setDate] = useState('');
+  const [filteredData, setFilteredData] = useState({});
+
+  useEffect(() => {
+    const getData = async () => {
+      const fetchedTransactions = await fetchTransactions();
+      setTransactions(fetchedTransactions);
+      setLoading(false);
+    };
+
+    getData();
+  }, []);
+
+  const handleInputChange = (e) => {
+    setCustomerId(e.target.value);
+  };
+
+  const handleAmountChange = (e) => {
+    setAmount(e.target.value);
+  };
+
+  const handleDateChange = (e) => {
+    setDate(e.target.value);
+  };
+
+  const handleSearch = () => {
+    const newAmount = parseFloat(amount);
+    const transactionPoints = calculatePoints(newAmount);
+
+    const data = transactions.find(transaction => transaction.customerId === parseInt(customerId) && transaction.amount === newAmount && transaction.date === date);
+    
+    if (data) {
+      setFilteredData({
+        total: transactionPoints,
+        monthly: { [new Date(date).toLocaleString('default', { month: 'long' })]: transactionPoints },
+      });
+    } else {
+      setFilteredData({});
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      <h1>Reward Points Summary</h1>
 
-export default App
+      <div>
+        <input
+          type="number"
+          placeholder="Enter Customer ID"
+          value={customerId}
+          onChange={handleInputChange}
+        />
+        <input
+          type="number"
+          placeholder="Enter Amount"
+          value={amount}
+          onChange={handleAmountChange}
+        />
+        <input
+          type="date"
+          value={date}
+          onChange={handleDateChange}
+        />
+        <button onClick={handleSearch}>Search</button>
+      </div>
+
+      {filteredData.total !== undefined ? (
+        <div>
+          <h2>Customer ID: {customerId}</h2>
+          <p>Total Points: {filteredData.total}</p>
+          <h3>Monthly Points:</h3>
+          <ul>
+            {Object.entries(filteredData.monthly).map(([month, points]) => (
+              <li key={month}>{month}: {points} points</li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <div>No data found for this Customer ID and transaction.</div>
+      )}
+    </div>
+  );
+};
+
+export default App;
