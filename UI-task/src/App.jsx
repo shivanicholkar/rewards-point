@@ -1,7 +1,6 @@
 // src/App.js
 
-import React, { useEffect, useState } from 'react';
-import { fetchTransactions } from './api';
+import React, { useState } from 'react';
 
 const calculatePoints = (amount) => {
   let points = 0;
@@ -17,26 +16,9 @@ const calculatePoints = (amount) => {
 };
 
 const App = () => {
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [customerId, setCustomerId] = useState('');
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState('');
-  const [filteredData, setFilteredData] = useState({});
-
-  useEffect(() => {
-    const getData = async () => {
-      const fetchedTransactions = await fetchTransactions();
-      setTransactions(fetchedTransactions);
-      setLoading(false);
-    };
-
-    getData();
-  }, []);
-
-  const handleInputChange = (e) => {
-    setCustomerId(e.target.value);
-  };
+  const [result, setResult] = useState(null);
 
   const handleAmountChange = (e) => {
     setAmount(e.target.value);
@@ -46,35 +28,28 @@ const App = () => {
     setDate(e.target.value);
   };
 
-  const handleSearch = () => {
-    const newAmount = parseFloat(amount);
-    const transactionPoints = calculatePoints(newAmount);
+  const handleCalculate = () => {
+    const parsedAmount = parseFloat(amount);
 
-    const data = transactions.find(transaction => transaction.customerId === parseInt(customerId) && transaction.amount === newAmount && transaction.date === date);
-    
-    if (data) {
-      setFilteredData({
-        total: transactionPoints,
-        monthly: { [new Date(date).toLocaleString('default', { month: 'long' })]: transactionPoints },
-      });
-    } else {
-      setFilteredData({});
+    if (isNaN(parsedAmount) || parsedAmount <= 0 || !date) {
+      alert("Please enter a valid amount and date.");
+      return;
     }
-  };
 
-  if (loading) return <div>Loading...</div>;
+    const points = calculatePoints(parsedAmount);
+    const month = new Date(date).toLocaleString('default', { month: 'long' });
+
+    setResult({
+      points,
+      month,
+    });
+  };
 
   return (
     <div>
-      <h1>Reward Points Summary</h1>
+      <h1>Reward Points Calculator</h1>
 
       <div>
-        <input
-          type="number"
-          placeholder="Enter Customer ID"
-          value={customerId}
-          onChange={handleInputChange}
-        />
         <input
           type="number"
           placeholder="Enter Amount"
@@ -86,22 +61,15 @@ const App = () => {
           value={date}
           onChange={handleDateChange}
         />
-        <button onClick={handleSearch}>Search</button>
+        <button onClick={handleCalculate}>Calculate Points</button>
       </div>
 
-      {filteredData.total !== undefined ? (
+      {result && (
         <div>
-          <h2>Customer ID: {customerId}</h2>
-          <p>Total Points: {filteredData.total}</p>
-          <h3>Monthly Points:</h3>
-          <ul>
-            {Object.entries(filteredData.monthly).map(([month, points]) => (
-              <li key={month}>{month}: {points} points</li>
-            ))}
-          </ul>
+          <h2>Results</h2>
+          <p>Total Points: {result.points}</p>
+          <p>Month: {result.month}</p>
         </div>
-      ) : (
-        <div>No data found for this Customer ID and transaction.</div>
       )}
     </div>
   );
