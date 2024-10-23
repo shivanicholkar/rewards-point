@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import InputForm from './components/InputForm';
 import CustomerPoints from './components/CustomerPoints';
 import { calculatePoints } from "./utils/rewards";
+import './index.css';
 
 const App = () => {
   const [amount, setAmount] = useState('');
@@ -19,7 +20,7 @@ const App = () => {
 
   const handleCalculate = () => {
     try {
-      const parsedAmount = parseFloat(amount);
+      const parsedAmount = parseFloat(amount); //used parsefloat to convert string values into the numbers ex: "10.2"= 10.2
       if (isNaN(parsedAmount) || parsedAmount <= 0 || !date) {
         throw new Error("Please enter a valid amount and date.");
       }
@@ -36,7 +37,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className='main-div'>
       <h1>Reward Points Calculator</h1>
       <InputForm 
         amount={amount} 
