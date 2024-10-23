@@ -1,8 +1,22 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+1. create a project using command ( npx create-next-app@latest )
+ - provided a project name
+ - select React
+ - select JavaScript
+ - installed node modules using command ( npm install )
+2. used commant to run a project on local server (npm run dev )  http://localhost:5173/
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+3. created a folder as a name of "Component"
+  created two components files
+  - CustomerPoints.jsx
+  - InputForm.jsx
+
+4. created one utils folder
+  - inside utils folder created a file "rewards.jsx" for main calculation logic 
+
+5. inside "App.jsx" file import both two components and one util file 
+6. imported App.jsx file into the  amain.jsx file
+
+* npm run dev
