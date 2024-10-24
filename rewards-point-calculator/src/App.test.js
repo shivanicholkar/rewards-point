@@ -7,7 +7,7 @@ describe('App Component', () => {
     render(<App />);
 
     // Check if the header text is in the document
-    expect(screen.getByText('Retailer Rewards Program')).toBeInTheDocument();
+    expect(screen.getByText('Reward Calculator')).toBeInTheDocument();
   });
 
 });

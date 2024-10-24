@@ -5,7 +5,7 @@ var app = express()
  
 app.use(cors())
 const PORT = 5000;
-const transactions = require('./data/transactions.json');
+const transactions = require('./dummyData/transactions.json');
 
 app.get('/api/transactions', (req, res) => {
   // Simulate asynchronous API call with a promise

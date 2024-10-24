@@ -9,7 +9,7 @@ import CustomerRewards from './components/CustomerRewards/CustomerRewards';
 function App() {
   return (
     <div className="App">
-      <h1>Retailer Rewards Program</h1>
+      <h1>Reward Calculator</h1>
       <CustomerRewards />
     </div>
   );
