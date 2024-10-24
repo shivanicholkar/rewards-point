@@ -4,8 +4,8 @@ const CustomerPoints = ({ points, month }) => {
   return (
     <div className='result-div'>
       <h2>Results</h2>
-      <p>Total Points:  {points}</p>
-      <p>Month:  {month}</p>
+      <p>Total Points: <span className='points'> {points} </span></p>
+      <p>Month: <span className='points'> {month} </span></p>
     </div>
   );
 };

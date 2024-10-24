@@ -39,7 +39,9 @@ h1 {
   font-size: 3.1em;
   line-height: 1.1;
 }
-
+span.points {
+  font-weight: bold;
+}
 button {
   border-radius: 8px;
   border: 1px solid transparent;
