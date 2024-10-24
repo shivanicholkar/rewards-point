@@ -2,10 +2,10 @@ import React from 'react';
 
 const CustomerPoints = ({ points, month }) => {
   return (
-    <div>
+    <div className='result-div'>
       <h2>Results</h2>
-      <p>Total Points: {points}</p>
-      <p>Month: {month}</p>
+      <p>Total Points:  {points}</p>
+      <p>Month:  {month}</p>
     </div>
   );
 };
